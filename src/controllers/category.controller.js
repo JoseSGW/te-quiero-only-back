@@ -1,5 +1,5 @@
 const server = require("express").Router();
-const { Category, conn } = require("../db.js");
+const { Category } = require("../db.js");
 
 // Ruta para filtrar cateogiras
 const filtCategories = async(req, res) => {

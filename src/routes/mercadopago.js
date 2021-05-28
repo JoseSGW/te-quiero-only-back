@@ -6,7 +6,6 @@ const mercadopago = require("mercadopago");
 
 const { MP_TOKEN } = process.env;
 
-console.log("soy el token", MP_TOKEN)
 
 mercadopago.configure({
   access_token: MP_TOKEN,

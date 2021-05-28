@@ -1,9 +1,8 @@
-const server = require("express").Router();
-const { User, conn } = require("../db.js");
+const { User } = require("../db.js");
 const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(process.env.CLIENT_ID);
 const bcrypt = require("bcryptjs");
-const { login } = require("./auth.controller");
+
 
 const loginGoogle = async (req, res) => {
   const { token } = req.body;

@@ -1,12 +1,5 @@
-const server = require("express").Router();
-const Sequelize = require("sequelize");
-const op = Sequelize.Op;
+
 const {
-  Product,
-  Category,
-  Ingredient,
-  Store,
-  Order,
   Image,
 } = require("../db.js");
 

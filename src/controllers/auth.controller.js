@@ -15,31 +15,36 @@ const passport = require("passport");
 const login = async (req, res, next) => {
   if (req.body.token) {
     const { token } = req.body;
-    const ticket = await client.verifyIdToken({
-      idToken: token,
-      audience: process.env.CLIENT_ID,
-    });
-    const { given_name, family_name, email, sub } = ticket.getPayload();
-    const hashedPassword = bcrypt.hash(sub, 10);
-    const [ user ] = await User.findOrCreate({
-      defaults: {
-        name: given_name,
-        surname: family_name,
-        admin: false,
-        email: email,
-        username: email, //el email es unico, mejor ese campo
-        password: (await hashedPassword).toString(), //cambiar a null - ver hashSync
-      },
-      where: {
-        email: email,
-      },
-    });
-    res.json({
-      msg: "Successfully Authenticated",
-      admin: user.dataValues.admin,
-      name: user.dataValues.name,
-      id: user.dataValues.id,
-    });
+
+    try {
+      const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: process.env.CLIENT_ID,
+      });
+      const { given_name, family_name, email, sub } = ticket.getPayload();
+      const hashedPassword = bcrypt.hash(sub, 10);
+      const [user] = await User.findOrCreate({
+        defaults: {
+          name: given_name,
+          surname: family_name,
+          admin: false,
+          email: email,
+          username: email, //el email es unico, mejor ese campo
+          password: (await hashedPassword).toString(), //cambiar a null - ver hashSync
+        },
+        where: {
+          email: email,
+        },
+      });
+      res.json({
+        msg: "Successfully Authenticated",
+        admin: user.dataValues.admin,
+        name: user.dataValues.name,
+        id: user.dataValues.id,
+      });
+    } catch (error) {
+      console.error(error)
+    }
   } else {
     passport.authenticate("local", { session: true }, (err, user, info) => {
       if (err) throw err;
