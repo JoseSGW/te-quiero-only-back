@@ -1,10 +1,12 @@
 const { Router } = require("express");
 const router = Router();
+require('dotenv').config();
 
 const mercadopago = require("mercadopago");
-const Order = require("../db.js");
 
 const { MP_TOKEN } = process.env;
+
+console.log("soy el token", MP_TOKEN)
 
 mercadopago.configure({
   access_token: MP_TOKEN,
@@ -12,16 +14,6 @@ mercadopago.configure({
 
 router.post("/create_preference", async (req, res, next) => {
   const { orderId } = req.query;
-
-  //Traemos la orden creada
-  // const orderMP = await Order.findOne({
-  //   where: {
-  //     id: orderId,
-  //   },
-  //   include: {
-  //     all: true,
-  //   },
-  // });
 
   let preference = {
     items: [
