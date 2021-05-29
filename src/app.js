@@ -17,8 +17,6 @@ const { SESSION_SECRET } = process.env;
 server.use(express.json());
 
 server.name = "API";
-server.use(express.static(path.join(__dirname, '../build')));
-
 
 server.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 server.use(bodyParser.json({ limit: "50mb" }));
@@ -64,8 +62,14 @@ server.use((err, req, res, next) => {
   res.status(status).send(message);
 });
 
-server.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../build', 'index.html'));
-});
+
+if (process.env.NODE_ENV === 'production') {
+  // Serve any static files
+  server.use(express.static(path.join(__dirname, '../build')));
+// Handle React routing, return all requests to React app
+  server.get('*', function(req, res) {
+    res.sendFile(path.join(__dirname, '../build', 'index.html'));
+  });
+}
 
 module.exports = server;
